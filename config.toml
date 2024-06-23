@@ -1,0 +1,17 @@
+[host]
+address = "localhost"
+port = 3306
+
+[postgres]
+address = "localhost"
+port = 5432
+user = "SuperSafeUser"
+password = "SuperSafePassword"
+
+[redis]
+address = "localhost"
+port = 6379
+
+[school]
+name = "This could be your school name!"
+mail_pattern = '^[a-z]+\.[a-z]+@andregymnasium\.lernsax\.de$'

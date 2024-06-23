@@ -1,0 +1,18 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO fenster.public.articles\n            (article_slug, article_title, article_content, article_author, article_published, editing_date)\n            VALUES($1, $2, $3, $4, $5,  NOW())",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Text",
+        "Text",
+        "Bool"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "a0992905dbf0516a93f63ceec4750fb193f34fa2fe11cf430ceeb1cea4bbc464"
+}

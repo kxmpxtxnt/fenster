@@ -1,0 +1,46 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT article_slug, article_title, article_content, article_author, article_published\n         FROM fenster.public.articles WHERE article_slug=$1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "article_slug",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 1,
+        "name": "article_title",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "article_content",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "article_author",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "article_published",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "1f3795e21835a00669826c9d2755a399639efad7a174c35c310f9e39c2c97723"
+}

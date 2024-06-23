@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO fenster.public.users(user_id, user_name, user_password_hash)\n            VALUES($1, $2, $3)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "0086f40d8a3c7183d117684a207e113cdafa49484e06371afbf5b60717670513"
+}

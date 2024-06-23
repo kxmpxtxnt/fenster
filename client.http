@@ -1,0 +1,38 @@
+POST 0.0.0.0:3306/u/register
+Content-Type: application/json
+Authorization: Bearer
+
+{
+  "id": "paule",
+  "name": "Paul Kindler",
+  "email": "paul.kindler@andregymnasium.lernsax.de",
+  "password": "SuperSafePassword"
+}
+
+###
+
+PUT 0.0.0.0:3306/u/login
+Content-Type: application/json
+
+{
+  "id": "paule",
+  "password": "SuperSafePassword"
+}
+
+###
+
+GET 0.0.0.0:3306/
+Authorization: Bearer test
+
+###
+
+POST 0.0.0.0:3306/a/
+Content-Type: application/json
+
+{
+  "title": "Test Article",
+  "slug": "test",
+  "content": "",
+  "author": "paule",
+  "published": true
+}
