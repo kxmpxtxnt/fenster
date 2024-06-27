@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT user_id, user_name, user_author FROM fenster.public.users WHERE user_id=$1",
+  "query": "SELECT user_id, user_name, user_email, user_author FROM fenster.public.users WHERE user_id=$1",
   "describe": {
     "columns": [
       {
@@ -15,6 +15,11 @@
       },
       {
         "ordinal": 2,
+        "name": "user_email",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
         "name": "user_author",
         "type_info": "Bool"
       }
@@ -27,8 +32,9 @@
     "nullable": [
       false,
       false,
+      false,
       true
     ]
   },
-  "hash": "63edafc6952acada8e2ddc61bc9056603ff8d1eef9dedea8d2539b7955327dca"
+  "hash": "e42201303f6aa4334fdad1dbab266d6fa93fbf30506421a50688195d9fb4ef26"
 }
