@@ -12,45 +12,46 @@ use tower::buffer::BufferLayer;
 use tower::limit::RateLimitLayer;
 use tower::ServiceBuilder;
 
-use crate::config::BackendConfig;
-use crate::handlers::{articles, auth, root, users};
+use crate::backend_config::BackendConfig;
 
-pub mod entities;
-pub mod handlers;
-pub mod connections;
-mod authentication;
-mod config;
+pub(crate) mod persistence;
+pub(crate) mod auth;
+pub(crate) mod user;
+pub(crate) mod article;
+pub(crate) mod fenster_error;
+pub(crate) mod backend_config;
 
 #[derive(Clone)]
 pub struct AppInject {
     pub postgres_pool: PgPool,
     pub redis_connection: MultiplexedConnection,
+    pub backend_config: BackendConfig,
 }
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let config: BackendConfig = toml::from_str(fs::read_to_string("./config.toml")
+    let backend_config: BackendConfig = toml::from_str(fs::read_to_string("./config.toml")
         .unwrap().as_str())
         .unwrap();
 
-    let postgres_pool = connections::create_postgres_pool(config.postgres).await
-        .expect("env DATABASE_URL should lead to a postgres server.");
+    let postgres_pool = persistence::postgres::create_postgres_pool(backend_config.clone().postgres).await
+        .expect("configuration postgres should lead to a postgres server.");
 
-    let redis_connection = connections::create_redis_connection(config.redis).await
-        .expect("env REDIS_URL should lead to a redis server.");
+    let redis_connection = persistence::redis::create_redis_connection(backend_config.clone().redis).await
+        .expect("configuration redis should lead to a redis server.");
 
     let inject = AppInject {
         postgres_pool,
         redis_connection,
+        backend_config: backend_config.clone(),
     };
 
     let router = Router::new()
-        .route("/", get(root::root))
-        .route("/u/login", put(auth::login))
-        .route("/u/:id", get(users::get_user))
-        .route("/u/register", post(auth::register))
-        .route("/a/", post(articles::create_article))
-        .route("/a/:slug", get(articles::get_article))
+        .route("/user/", put(auth::auth_handler::login))
+        .route("/user/", post(auth::auth_handler::register))
+        .route("/user/:id", get(user::user_handler::get_user))
+        .route("/article/", post(article::article_handler::create_article))
+        .route("/article/:slug", get(article::article_handler::get_article))
         .route_layer(ServiceBuilder::new()
             .layer(HandleErrorLayer::new(|err| async move {
                 (
@@ -63,11 +64,13 @@ async fn main() -> Result<()> {
         )
         .with_state(inject);
 
+    let host = backend_config.clone().host;
+
     let listener = tokio::net::TcpListener::bind(
-        format!("{}:{}", config.host.address, config.host.port)
+        format!("{}:{}", host.address, host.port)
     ).await?;
 
-    println!("Listening on {}:{}", config.host.address, config.host.port);
+    println!("Listening on {}:{}", host.address, host.port);
     axum::serve(listener, router).await?;
     Ok(())
 }
