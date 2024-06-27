@@ -1,14 +1,14 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct BackendConfig {
     pub host: Host,
     pub postgres: Postgres,
     pub redis: Host,
-    pub school: School
+    pub school: School,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct Postgres {
     pub address: String,
     pub port: u16,
@@ -16,14 +16,15 @@ pub struct Postgres {
     pub password: String,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct Host {
     pub address: String,
-    pub port: u16
+    pub port: u16,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct School {
     pub name: String,
     pub mail_pattern: String,
+    pub example_mail: String
 }

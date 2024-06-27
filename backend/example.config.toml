@@ -1,0 +1,18 @@
+[host]
+address = "localhost"
+port = 3306
+
+[postgres]
+address = "localhost"
+port = 5432
+user = "user"
+password = "password"
+
+[redis]
+address = "localhost"
+port = 6379
+
+[school]
+name = "This could be your school name!"
+mail_pattern = '^[a-z]+\.[a-z]+@school\.domain\.tld$'
+example_mail = "firstname.secondname@school.domain.tld"
