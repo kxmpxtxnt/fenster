@@ -25,15 +25,15 @@ pub async fn create_article(
     State(AppInject { postgres_pool, .. }): State<AppInject>,
     Json(create): Json<CreateArticle>,
 ) -> Result<Json<Article>, FensterError> {
-    if article_entity::exists(&create.slug.as_str(), &postgres_pool).await? {
+    if article_entity::exists(create.slug.as_str(), &postgres_pool).await? {
         return Err(Conflict(format!("Article with given slug ({}) already exists.", create.slug)));
     }
 
-    if !user_entity::exists_id(&create.author.as_str(), &postgres_pool).await? {
+    if !user_entity::exists_id(create.author.as_str(), &postgres_pool).await? {
         return Err(NotFound(format!("Author with given id ({}) does not exist.", create.author)));
     }
 
-    let user = user_entity::fetch(&create.author.as_str(), &postgres_pool).await?;
+    let user = user_entity::fetch(create.author.as_str(), &postgres_pool).await?;
 
     if !user.author {
         return Err(Unauthorized(format!("User with given id ({}) is not a author.", user.id)));

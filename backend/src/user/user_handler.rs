@@ -9,7 +9,7 @@ pub async fn get_user(
     State(AppInject { postgres_pool, .. }): State<AppInject>,
     Path(id): Path<String>,
 ) -> Result<Json<User>, FensterError> {
-    let exists = user::user_entity::exists_id(&id, &postgres_pool).await.map_err(|err| err)?;
+    let exists = user::user_entity::exists_id(&id, &postgres_pool).await?;
 
     if !exists {
         return Err(FensterError::NotFound("User does not exist.".to_string()));
