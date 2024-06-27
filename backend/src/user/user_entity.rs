@@ -2,7 +2,7 @@ use anyhow::Result;
 use argon2::{Argon2, PasswordHasher, PasswordVerifier};
 use argon2::password_hash::{PasswordHashString, SaltString};
 use argon2::password_hash::rand_core::OsRng;
-use log::{error};
+use log::error;
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
 

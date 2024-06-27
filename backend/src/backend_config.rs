@@ -26,5 +26,5 @@ pub struct Host {
 pub struct School {
     pub name: String,
     pub mail_pattern: String,
-    pub example_mail: String
+    pub example_mail: String,
 }

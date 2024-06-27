@@ -4,7 +4,7 @@ use axum::response::{IntoResponse, Response};
 use crate::fenster_error::FensterError::*;
 
 #[derive(Debug)]
-pub enum  FensterError {
+pub enum FensterError {
     NotFound(String),
     Internal(u16),
     Conflict(String),

@@ -1,8 +1,9 @@
 use std::process::exit;
-use log::{error};
-use sqlx::{PgPool, Pool, Postgres};
-use anyhow::Result;
+
 use anyhow::Ok;
+use anyhow::Result;
+use log::error;
+use sqlx::{PgPool, Pool, Postgres};
 
 pub async fn create_postgres_pool(postgres: crate::backend_config::Postgres) -> Result<Pool<Postgres>> {
     let pool = PgPool::connect(format!("postgresql://{}:{}@{}:{}/fenster", postgres.user, postgres.password, postgres.address, postgres.port).as_str()).await

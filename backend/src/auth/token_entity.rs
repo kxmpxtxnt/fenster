@@ -3,15 +3,15 @@ use std::string::String;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 use anyhow::Result;
-use log::{error};
+use log::error;
 use rand::Rng;
-use redis::{AsyncCommands};
 use redis::aio::MultiplexedConnection;
+use redis::AsyncCommands;
 use redis_macros::{FromRedisValue, ToRedisArgs};
 use serde::{Deserialize, Serialize};
 
-use crate::fenster_error::{error, FensterError, REDIS_ERROR, SERDE_ERROR, OTHER_INTERNAL_ERROR};
-use crate::fenster_error::FensterError::{Internal};
+use crate::fenster_error::{error, FensterError, OTHER_INTERNAL_ERROR, REDIS_ERROR, SERDE_ERROR};
+use crate::fenster_error::FensterError::Internal;
 use crate::user::user_entity::User;
 
 const CHARS: &str =
