@@ -5,9 +5,9 @@ edition = "2021"
 
 [dependencies]
 log = "0.4.21"
-toml = "0.8.13"
+toml = "0.8.14"
 serde = "1.0.203"
-serde_json = "1.0.117"
+serde_json = "1.0.118"
 regex = { version = "1.10.5", features = ["std"] }
 axum = { version = "0.7.5", features = ["json"] }
 anyhow = { version = "1.0.86", features = ["std"] }
