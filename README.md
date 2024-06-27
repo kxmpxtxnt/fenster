@@ -19,7 +19,8 @@ use this project for very important things if you plan to do so.
 
 ## Structure
 
-As already mentioned, the backend is written in rust. The frontend for first web and later mobile in kotlin.
+As already mentioned, the backend is written in rust. The frontend for first web and later mobile in kotlin. Maybe the
+website will be in another language but im unsure.
 Communication is done via a rest api which is documented (maybe xd) via openapi.
 
 ## Contribution
