@@ -12,11 +12,10 @@ pub enum  FensterError {
 }
 
 
-pub const INVALID_REGEX_PATTERN: u16 = 111;
+pub const OTHER_INTERNAL_ERROR: u16 = 111;
 pub const POSTGRES_ERROR: u16 = 222;
 pub const SERDE_ERROR: u16 = 333;
 pub const REDIS_ERROR: u16 = 444;
-pub const SYSTEM_TIME_ERROR: u16 = 555;
 
 pub fn error(error: u16, i: u16) -> u16 {
     error * 10 + i

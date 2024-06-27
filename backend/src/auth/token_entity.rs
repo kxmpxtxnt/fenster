@@ -10,7 +10,7 @@ use redis::aio::MultiplexedConnection;
 use redis_macros::{FromRedisValue, ToRedisArgs};
 use serde::{Deserialize, Serialize};
 
-use crate::fenster_error::{error, FensterError, REDIS_ERROR, SERDE_ERROR, SYSTEM_TIME_ERROR};
+use crate::fenster_error::{error, FensterError, REDIS_ERROR, SERDE_ERROR, OTHER_INTERNAL_ERROR};
 use crate::fenster_error::FensterError::{Internal};
 use crate::user::user_entity::User;
 
@@ -120,7 +120,7 @@ fn token_with_expiration(days: u64) -> Result<AccessToken, FensterError> {
         .inspect_err(|err| {
             error!("Error while loading duration since unix_epoch. - {}", err)
         })
-        .map_err(|_| Internal(SYSTEM_TIME_ERROR))?;
+        .map_err(|_| Internal(error(OTHER_INTERNAL_ERROR, 2)))?;
 
     Ok(AccessToken {
         token: generate_token(),

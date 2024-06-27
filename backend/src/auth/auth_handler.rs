@@ -5,7 +5,7 @@ use log::error;
 
 use crate::{AppInject, user::user_entity};
 use crate::auth::{LoginUser, RegisterUser, token_entity};
-use crate::fenster_error::{FensterError, INVALID_REGEX_PATTERN};
+use crate::fenster_error::{error, FensterError, OTHER_INTERNAL_ERROR};
 use crate::fenster_error::FensterError::{Conflict, Internal, Unauthorized};
 use crate::user::user_entity::User;
 
@@ -35,7 +35,7 @@ pub async fn register(
         .inspect_err(|err| {
             error!("Error parsing school mail regex pattern. ({}) - {}", school.mail_pattern, err)
         })
-        .map_err(|_| Internal(INVALID_REGEX_PATTERN))?;
+        .map_err(|_| Internal(error(OTHER_INTERNAL_ERROR, 1)))?;
 
     if !regex.is_match(register.email.as_str()) {
         return Err(Conflict(format!("Mail ({}) does not match the pattern (Example {}).", register.email, school.example_mail).to_string()));
