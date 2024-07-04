@@ -1,9 +1,17 @@
+use axum::{Json, Router};
 use axum::extract::{Path, State};
-use axum::Json;
+use axum::routing::get;
 
 use crate::{AppInject, user};
 use crate::fenster_error::FensterError;
 use crate::user::user_entity::User;
+
+use anyhow::Result;
+
+pub fn user_router() -> Router<AppInject> {
+    Router::new()
+        .route("/:id", get(get_user))
+}
 
 pub async fn get_user(
     State(AppInject { postgres_pool, .. }): State<AppInject>,

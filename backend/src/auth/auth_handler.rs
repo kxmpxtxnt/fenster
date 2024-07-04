@@ -1,13 +1,25 @@
+use anyhow::Result;
+use axum::{Json, Router};
 use axum::extract::State;
-use axum::Json;
-use axum::response::Redirect;
-use log::error;
+use axum::http::StatusCode;
+use axum::routing::{post, put};
+use axum_extra::headers::Authorization;
+use axum_extra::headers::authorization::Bearer;
+use axum_extra::TypedHeader;
+use tracing::error;
 
 use crate::{AppInject, user::user_entity};
-use crate::auth::{LoginUser, RegisterUser, token_entity};
+use crate::auth::{LoginUser, RegisterUser, require_authentication, token_entity};
 use crate::fenster_error::{error, FensterError, OTHER_INTERNAL_ERROR};
 use crate::fenster_error::FensterError::{Conflict, Internal, Unauthorized};
 use crate::user::user_entity::User;
+
+pub fn auth_router() -> Router<AppInject> {
+    Router::new()
+        .route("/login", put(login))
+        .route("/logout", put(logout))
+        .route("/register", post(register))
+}
 
 pub async fn login(
     State(AppInject { postgres_pool, redis_connection, .. }): State<AppInject>,
@@ -19,16 +31,24 @@ pub async fn login(
         return Err(Unauthorized(format!("Password for user with given id ({}) is incorrect.", login.id)));
     }
 
-    match token_entity::create_token(user, redis_connection).await {
-        Ok(token) => Ok(Json(token)),
-        Err(err) => Err(err)
-    }
+    let token = token_entity::create_token(user, redis_connection).await?;
+    Ok(Json(token))
+}
+
+pub async fn logout(
+    State(AppInject { redis_connection, .. }): State<AppInject>,
+    TypedHeader(Authorization(bearer)): TypedHeader<Authorization<Bearer>>,
+) -> Result<StatusCode, FensterError> {
+    require_authentication(bearer.clone(), redis_connection.clone()).await?;
+
+    token_entity::revoke_access(bearer.token().to_string(), redis_connection.clone()).await?;
+    Ok(StatusCode::NO_CONTENT)
 }
 
 pub async fn register(
     State(AppInject { postgres_pool, backend_config, .. }): State<AppInject>,
     Json(register): Json<RegisterUser>,
-) -> Result<Redirect, FensterError> {
+) -> Result<StatusCode, FensterError> {
     let school = backend_config.school.clone();
 
     let regex = regex::Regex::new(school.mail_pattern.as_str())
@@ -57,5 +77,5 @@ pub async fn register(
     };
 
     user.store(register.password.as_str(), &postgres_pool).await?;
-    Ok(Redirect::to("/u/login"))
+    Ok(StatusCode::CREATED)
 }

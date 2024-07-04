@@ -1,6 +1,7 @@
 use anyhow::Result;
+use axum::{Json, Router};
 use axum::extract::{Path, State};
-use axum::Json;
+use axum::routing::{get, post};
 
 use crate::AppInject;
 use crate::article::{article_entity, article_entity::Article};
@@ -8,6 +9,12 @@ use crate::article::article_entity::CreateArticle;
 use crate::fenster_error::FensterError;
 use crate::fenster_error::FensterError::{Conflict, NotFound, Unauthorized};
 use crate::user::user_entity;
+
+pub fn article_router() -> Router<AppInject> {
+    Router::new()
+        .route("/", post(create_article))
+        .route("/:slug", get(get_article))
+}
 
 pub async fn get_article(
     State(AppInject { postgres_pool, .. }): State<AppInject>,

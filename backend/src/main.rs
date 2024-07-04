@@ -5,13 +5,12 @@ use anyhow::Result;
 use axum::error_handling::HandleErrorLayer;
 use axum::http::StatusCode;
 use axum::Router;
-use axum::routing::{get, post, put};
 use redis::aio::MultiplexedConnection;
 use sqlx::PgPool;
 use tower::buffer::BufferLayer;
 use tower::limit::RateLimitLayer;
 use tower::ServiceBuilder;
-
+use tracing::info;
 use crate::backend_config::BackendConfig;
 
 pub(crate) mod persistence;
@@ -30,6 +29,10 @@ pub struct AppInject {
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    tracing::subscriber::set_global_default(
+        tracing_subscriber::fmt().finish()
+    )?;
+    
     let backend_config: BackendConfig = toml::from_str(fs::read_to_string("./config.toml")
         .unwrap().as_str())
         .unwrap();
@@ -47,11 +50,9 @@ async fn main() -> Result<()> {
     };
 
     let router = Router::new()
-        .route("/user/", put(auth::auth_handler::login))
-        .route("/user/", post(auth::auth_handler::register))
-        .route("/user/:id", get(user::user_handler::get_user))
-        .route("/article/", post(article::article_handler::create_article))
-        .route("/article/:slug", get(article::article_handler::get_article))
+        .nest("/user", user::user_handler::user_router())
+        .nest("/auth", auth::auth_handler::auth_router())
+        .nest("/article", article::article_handler::article_router())
         .route_layer(ServiceBuilder::new()
             .layer(HandleErrorLayer::new(|err| async move {
                 (
@@ -70,7 +71,7 @@ async fn main() -> Result<()> {
         format!("{}:{}", host.address, host.port)
     ).await?;
 
-    println!("Listening on {}:{}", host.address, host.port);
+    info!("Listening on {}:{}", host.address, host.port);
     axum::serve(listener, router).await?;
     Ok(())
 }
