@@ -10,7 +10,7 @@ use tracing::error;
 
 use crate::{AppInject, user::user_entity};
 use crate::auth::{LoginUser, RefreshBody, RegisterUser, require_authentication, token_entity};
-use crate::auth::token_entity::*;
+use crate::auth::token_entity::Token;
 use crate::fenster_error::{error, FensterError, OTHER_INTERNAL_ERROR};
 use crate::fenster_error::FensterError::{Conflict, Internal, Unauthorized};
 use crate::user::user_entity::User;
