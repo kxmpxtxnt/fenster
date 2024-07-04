@@ -23,6 +23,22 @@ As already mentioned, the backend is written in rust. The frontend for first web
 website will be in another language but im unsure.
 Communication is done via a rest api which is documented (maybe xd) via openapi.
 
+## Checklist
+### Backend:
+
+- [ ] Auth
+    - [ ] Login
+    - [ ] Logout
+    - [ ] Refresh
+- [ ] User
+    - [ ] Register
+    - [ ] Delete
+- [ ] Articles
+    - [ ] Create
+    - [ ] Un/-Publish
+    - [ ] Edit
+    - [ ] Delete
+
 ## Contribution
 
 Feel free to open a clone / pr and change everything you think should be. Any mentions with constructive criticism /
