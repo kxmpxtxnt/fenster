@@ -30,3 +30,8 @@ pub async fn require_authentication(bearer: Bearer, redis: MultiplexedConnection
 
     token.auth_token.is_expired()
 }
+
+#[derive(Deserialize)]
+pub struct RefreshBody {
+    pub(crate) refresh_token: String
+}

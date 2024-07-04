@@ -11,7 +11,6 @@ pub enum FensterError {
     Unauthorized(String),
 }
 
-
 pub const OTHER_INTERNAL_ERROR: u16 = 111;
 pub const POSTGRES_ERROR: u16 = 222;
 pub const SERDE_ERROR: u16 = 333;
@@ -27,8 +26,10 @@ impl IntoResponse for FensterError {
             NotFound(message) => (StatusCode::NOT_FOUND, message),
             Conflict(message) => (StatusCode::CONFLICT, message),
             Unauthorized(message) => (StatusCode::UNAUTHORIZED, message),
-            Internal(code) => (StatusCode::INTERNAL_SERVER_ERROR,
-                               format!("Internal server error. Code: {} | Please contact the responsible.", code)),
+            Internal(code) => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Internal server error. Code: {} | Please contact the responsible.", code)
+            ),
         }.into_response()
     }
 }
