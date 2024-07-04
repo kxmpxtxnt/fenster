@@ -4,17 +4,19 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-log = "0.4.21"
 toml = "0.8.14"
 serde = "1.0.203"
+tracing = "0.1.40"
 serde_json = "1.0.118"
-regex = { version = "1.10.5", features = ["std"] }
 axum = { version = "0.7.5", features = ["json"] }
+regex = { version = "1.10.5", features = ["std"] }
 anyhow = { version = "1.0.86", features = ["std"] }
 redis-macros = { version = "0.3.0", features = ["json"] }
 axum-auth = { version = "0.7.0", features = ["auth-bearer"] }
 tower = { version = "0.4.13", features = ["limit", "buffer"] }
+axum-extra = { version = "0.9.3", features = ["typed-header"] }
 rand = { version = "0.8.5", features = ["std"] }
+tracing-subscriber = { version = "0.3.18", features = ["json"] }
 argon2 = { version = "0.5.3", features = ["std"] }
 sqlx = { version = "0.7.4", features = ["runtime-tokio", "postgres", "tls-rustls"] }
 tokio = { version = "1.38.0", features = ["rt", "rt-multi-thread", "macros", "net"] }
