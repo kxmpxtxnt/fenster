@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 
 use anyhow::Result;
-use log::error;
+use tracing::error;
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
 

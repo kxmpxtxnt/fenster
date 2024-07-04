@@ -2,7 +2,7 @@ use std::process::exit;
 
 use anyhow::Ok;
 use anyhow::Result;
-use log::error;
+use tracing::error;
 use sqlx::{PgPool, Pool, Postgres};
 
 pub async fn create_postgres_pool(postgres: crate::backend_config::Postgres) -> Result<Pool<Postgres>> {

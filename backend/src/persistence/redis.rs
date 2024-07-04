@@ -1,6 +1,6 @@
 use std::process::exit;
 
-use log::error;
+use tracing::error;
 use redis::aio::MultiplexedConnection;
 use redis::Client;
 
