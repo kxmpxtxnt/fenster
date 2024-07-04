@@ -2,9 +2,9 @@ use anyhow::Result;
 use argon2::{Argon2, PasswordHasher, PasswordVerifier};
 use argon2::password_hash::{PasswordHashString, SaltString};
 use argon2::password_hash::rand_core::OsRng;
-use tracing::error;
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
+use tracing::error;
 
 use crate::fenster_error::{error, FensterError, POSTGRES_ERROR};
 use crate::fenster_error::FensterError::{Internal, NotFound};
@@ -118,4 +118,22 @@ pub async fn fetch(id: &str, pool: &PgPool) -> Result<User, FensterError> {
         email: user.user_email,
         author: user.user_author.unwrap_or(false),
     })
+}
+
+pub async fn delete(id: &str, pool: &PgPool) -> Result<(), FensterError> {
+    if !exists_id(id, pool).await.unwrap_or(false) {
+        return Err(NotFound("User does not exist.".to_string()));
+    }
+
+    sqlx::query!("DELETE FROM fenster.public.users WHERE user_id=$1", id)
+        .execute(pool)
+        .await
+        .inspect_err(|err| {
+            error!("Error while delete user with id ({}). - {}", id, err);
+        })
+        .map_err(|_| {
+            Internal(error(POSTGRES_ERROR, 10))
+        })?;
+
+    Ok(())
 }

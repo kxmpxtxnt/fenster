@@ -21,14 +21,15 @@ pub struct LoginUser {
     pub(crate) password: String,
 }
 
-pub async fn require_authentication(bearer: Bearer, redis: MultiplexedConnection) -> Result<(), FensterError> {
+pub async fn require_authentication(bearer: Bearer, redis: MultiplexedConnection) -> Result<String, FensterError> {
     let access_token = String::from(bearer.token());
     
     let user_id = token_entity::user_id_from_token(access_token, redis.clone()).await?;
 
-    let token = token_entity::token_from_user_id(user_id, redis.clone()).await?;
+    let token = token_entity::token_from_user_id(user_id.clone(), redis.clone()).await?;
 
-    token.auth_token.is_expired()
+    token.auth_token.is_expired()?;
+    Ok(user_id)
 }
 
 #[derive(Deserialize)]

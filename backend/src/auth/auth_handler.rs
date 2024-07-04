@@ -21,6 +21,7 @@ pub fn auth_router() -> Router<AppInject> {
         .route("/logout", put(logout))
         .route("/refresh", put(refresh))
         .route("/register", post(register))
+        .route("/delete", put(delete))
 }
 
 pub async fn login(
@@ -90,4 +91,14 @@ pub async fn refresh(
     require_authentication(bearer.clone(), redis_connection.clone()).await?;
     let token = token_entity::refresh_access(refresh.refresh_token, redis_connection.clone()).await?;
     Ok(Json(token))
+}
+
+pub async fn delete(
+    State(AppInject { redis_connection, postgres_pool, .. }): State<AppInject>,
+    TypedHeader(Authorization(bearer)): TypedHeader<Authorization<Bearer>>
+) -> Result<StatusCode, FensterError> {
+    let user_id = require_authentication(bearer.clone(), redis_connection.clone()).await?;
+    token_entity::revoke_access(bearer.token().to_string(), redis_connection).await?;
+    user_entity::delete(user_id.as_str(), &postgres_pool).await?;
+    Ok(StatusCode::OK)
 }
